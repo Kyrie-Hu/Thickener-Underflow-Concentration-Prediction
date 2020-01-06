@@ -65,7 +65,6 @@ if __name__ == "__main__":
     debug = False
     save_plots = True
     # i = sys.argv[1]
-    i = 5
 
 
     with open(os.path.join("data", "enc_kwargs.json"), "r") as fi:
@@ -80,7 +79,7 @@ if __name__ == "__main__":
 
     scaler = joblib.load(os.path.join("data", "scaler"+"%s"%i+".pkl"))
     #scaler = StandardScaler().fit()
-    raw_data = pd.read_csv(os.path.join("data_foreach", "res_all_selected_features_smooth_"+"%s"%i+".csv"), nrows=100 if debug else None)
+    raw_data = pd.read_csv(os.path.join("data_foreach", "all.csv"), nrows=100 if debug else None)
     targ_cols = ("11",)
 
 
@@ -95,18 +94,6 @@ if __name__ == "__main__":
         da_rnn_kwargs = json.load(fi)
     final_y_pred = predict(enc.cuda(), dec.cuda(), data, **da_rnn_kwargs)
 
-    # encoder_attention_list = np.zeros((9,12))
-    # for t in range(0,9):
-    #     for i in range(0,12):
-    #         encoder_attention_list[t, i] = np.mean(np.concatenate(encoder_attn_list[t,i]))
-    #
-    # decoder_attention_list = np.zeros((9, 9))
-    # for t in range(0, 9):
-    #     for i in range(0, 9):
-    #         decoder_attention_list[t, i] = np.mean(np.concatenate(decoder_attn_list[t, i]))
-    #
-    # np.save("encoder_list", encoder_attention_list)
-    # np.save("decoder_list", decoder_attention_list)
 
 
     plt.figure()
@@ -124,7 +111,6 @@ if __name__ == "__main__":
     raw_data = raw_data.reset_index(drop=True)
 
     plt.figure()
-    #x = range(1,201)
     plt.plot(raw_data[['11']][(da_rnn_kwargs["T"]-1):], label="True")
     plt.plot(final_y_pred_1, label='Predicted')
     plt.legend(loc='upper left')
